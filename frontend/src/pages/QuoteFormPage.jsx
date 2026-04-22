@@ -8,6 +8,13 @@ import StepInsurance from '../components/steps/StepInsurance';
 import StepVehicle from '../components/steps/StepVehicle';
 import StepSummary from '../components/steps/StepSummary';
 import logo from '../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
+import { quoteApi } from '../services/api';
+
+
+
+
+
 
 const STEP_LABELS = ['Personnel', 'Conducteur', 'Assurance', 'Véhicule', 'Récap'];
 
@@ -16,15 +23,37 @@ const QuoteFormPage = () => {
   const { cities } = useCities();
   const { state, totalSteps } = form;
 
+
+  const navigate = useNavigate();
+
+  const handleConfirm = async () => {
+    try {
+      const payload = {
+        ...state.personal,
+        ...state.driver,
+        ...state.insurance,
+        ...state.vehicle,
+      };
+      await quoteApi.create(payload);
+      navigate('/estimation', { state: { quoteData: payload } });
+    } catch (err) {
+      console.error('Erreur soumission:', err);
+    }
+  };
+
   return (
     <div className="page-wrapper">
       <header className="app-header">
         <div className="header-inner">
           <div className="logo">
-            <img src={logo} alt="AssurDevis" />
+            <a href="https://www.aksam-assurances.fr/">
+            <img src={logo} alt="AssurDevis"  />
+            </a>
           </div>
           <div className="header-meta">
-            <span className="header-step-label">Étape {state.currentStep} sur {totalSteps}</span>
+            <span className="header-step-label">Besion d'aide?</span>
+            <br />
+            	<a href="tel:0182834800">0182834800</a>
           </div>
         </div>
       </header>
@@ -69,5 +98,6 @@ const QuoteFormPage = () => {
     </div>
   );
 };
+
 
 export default QuoteFormPage;

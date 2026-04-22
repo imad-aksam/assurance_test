@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { quoteApi } from '../services/api';
+import { quoteApi, referentialApi } from '../services/api';
 import '../styles/admin.css';
+import logo from '../assets/logo.png';
 
 const STATUS_CONFIG = {
   draft:     { label: 'Brouillon',  color: '#92400e', dot: '#f59e0b' },
@@ -152,16 +153,10 @@ const AdminDashboard = () => {
       {/* ── Sidebar ──────────────────────────────────────────────────────── */}
       <aside className="adm-sidebar">
         <div className="adm-brand">
-          <div className="adm-brand-icon">
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-              <path d="M11 2L19 6v7c0 4-3.5 7-8 8C6.5 20 3 17 3 13V6l8-4z"
-                stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
-              <path d="M7.5 11l2.5 2.5 4.5-5" stroke="currentColor"
-                strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
           <div>
-            <div className="adm-brand-name">AssurDevis</div>
+            <a href="/">
+            <img src={logo} alt="AssurDevis"  />
+            </a>
             <div className="adm-brand-sub">Administration</div>
           </div>
         </div>

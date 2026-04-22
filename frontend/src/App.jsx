@@ -1,27 +1,20 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import QuoteFormPage from './pages/QuoteFormPage';
 import AdminDashboard from './pages/AdminDashboard';
+import EstimationPage from './pages/EstimationPage';
 import './styles/global.css';
 
-/**
- * Routage simple basé sur le hash :
- *   /           → Formulaire de devis client
- *   /#/admin    → Interface d'administration
- */
 const App = () => {
-  const [hash, setHash] = React.useState(window.location.hash);
-
-  React.useEffect(() => {
-    const onHash = () => setHash(window.location.hash);
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
-  }, []);
-
-  if (hash === '#/admin') {
-    return <AdminDashboard />;
-  }
-
-  return <QuoteFormPage />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/"           element={<QuoteFormPage />} />
+        <Route path="/admin"      element={<AdminDashboard />} />
+        <Route path="/estimation" element={<EstimationPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default App;

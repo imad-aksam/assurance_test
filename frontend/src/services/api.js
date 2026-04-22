@@ -46,3 +46,7 @@ export const referentialApi = {
   getBrands: (type = '') =>
     request(`/brands${type ? `?type=${type}` : ''}`),
 };
+
+
+const api = { ...quoteApi, ...referentialApi };
+export default api;

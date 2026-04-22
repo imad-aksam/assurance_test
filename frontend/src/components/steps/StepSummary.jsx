@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { NavButtons } from '../UI';
+
 
 const STATUS_CONFIG = {
   draft:     { label: 'Brouillon',  color: '#92400e', dot: '#f59e0b' },
@@ -40,28 +42,33 @@ const StepSummary = ({ state, cities, onConfirm, onPrev, onEdit, savedQuote }) =
 
   const formatCurrency = (v) => v !== '' ? `${Number(v).toLocaleString('fr-MA')} MAD` : '—';
 
-  if (savedQuote) {
-    return (
-      <div className="step-container">
-        <div className="success-screen">
-          <div className="success-icon">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="2" />
-              <path d="M18 32l10 10 18-20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <h2 className="success-title">Devis soumis avec succès !</h2>
-          <p className="success-message">
-            Votre devis <strong>#{savedQuote.id}</strong> a bien été enregistré. Notre équipe vous contactera sous 24h au <strong>{savedQuote.telephone}</strong>.
-          </p>
-          <div className="success-ref">
-            Référence : <code>DEVIS-{String(savedQuote.id).padStart(6, '0')}</code>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const navigate = useNavigate();
 
+useEffect(() => {
+  if (savedQuote) {
+    navigate('/estimation', {
+      state: {
+        quoteData: {
+          vehicleType: insurance.typeAssurance,
+          horsePower: insurance.typeAssurance === 'auto'
+            ? vehicle.puissanceFiscale
+            : vehicle.cylindree,
+          driverAge: driver.dateNaissance
+            ? new Date().getFullYear() - new Date(driver.dateNaissance).getFullYear()
+            : 30,
+          licenseYears: driver.datePermis
+            ? new Date().getFullYear() - new Date(driver.datePermis).getFullYear()
+            : 5,
+          city: personal.cityId,
+          firstName: personal.prenom,
+          lastName: personal.nom,
+          vehicleBrand: vehicle.marqueVehicule,
+          vehicleModel: '',
+        },
+      },
+    });
+  }
+}, [savedQuote]);
   return (
     <div className="step-container">
       <div className="step-header">
@@ -115,5 +122,9 @@ const StepSummary = ({ state, cities, onConfirm, onPrev, onEdit, savedQuote }) =
     </div>
   );
 };
+
+
+
+
 
 export default StepSummary;
