@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { quoteApi } from '../services/api';
 import type { QuoteResponse } from '../types/quote';
+import logo from '../assets/logo.png';
 
 const STATUS_LABELS: Record<string, { label: string; class: string }> = {
-  draft:     { label: 'Brouillon',  class: 'badge-draft' },
-  submitted: { label: 'Soumis',     class: 'badge-submitted' },
-  confirmed: { label: 'Confirmé',   class: 'badge-confirmed' },
+  draft: { label: 'Brouillon', class: 'badge-draft' },
+  submitted: { label: 'Soumis', class: 'badge-submitted' },
+  confirmed: { label: 'Confirmé', class: 'badge-confirmed' },
 };
 
 const AdminDashboard: React.FC = () => {
@@ -39,13 +40,10 @@ const AdminDashboard: React.FC = () => {
     <div className="admin-wrapper">
       <header className="admin-header">
         <div className="admin-header-inner">
+          <div className="admin-logo">
+            <img src={logo} alt="AssurDevis Logo" height="32" />
+          </div>
           <h1 className="admin-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.4" fill="none" />
-              <rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.4" fill="none" />
-              <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.4" fill="none" />
-              <rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.4" fill="none" />
-            </svg>
             Administration — Devis
           </h1>
           <span className="admin-count">{total} devis au total</span>

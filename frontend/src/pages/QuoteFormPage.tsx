@@ -7,6 +7,7 @@ import StepDriver from '../components/steps/StepDriver';
 import StepInsurance from '../components/steps/StepInsurance';
 import StepVehicle from '../components/steps/StepVehicle';
 import StepSummary from '../components/steps/StepSummary';
+import logo from '../assets/logo.png';
 
 const STEP_LABELS = [
   'Personnel',
@@ -31,8 +32,7 @@ const QuoteFormPage: React.FC = () => {
       <header className="app-header">
         <div className="header-inner">
           <div className="logo">
-
-            <span className="logo-text">AksamAssurance</span>
+            <img src={logo} alt="AssurDevis Logo" height="32" />
           </div>
           <div className="header-meta">
             <span className="header-step-label">
