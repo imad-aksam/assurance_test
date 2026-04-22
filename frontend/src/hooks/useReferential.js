@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import { referentialApi } from '../services/api';
-import type { City, VehicleBrand } from '../types/quote';
-
-// ─── Hook pour les villes ─────────────────────────────────────────────────────
 
 export function useCities() {
-  const [cities, setCities] = useState<City[]>([]);
+  const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -23,10 +20,8 @@ export function useCities() {
   return { cities, loading, error };
 }
 
-// ─── Hook pour les marques de véhicules ──────────────────────────────────────
-
-export function useVehicleBrands(type: 'auto' | 'moto' | '') {
-  const [brands, setBrands] = useState<VehicleBrand[]>([]);
+export function useVehicleBrands(type) {
+  const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

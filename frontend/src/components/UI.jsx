@@ -2,19 +2,8 @@ import React from 'react';
 
 // ─── Barre de progression ─────────────────────────────────────────────────────
 
-interface ProgressBarProps {
-  currentStep: number;
-  totalSteps: number;
-  labels?: string[];
-}
-
-export const ProgressBar: React.FC<ProgressBarProps> = ({
-  currentStep,
-  totalSteps,
-  labels = [],
-}) => {
+export const ProgressBar = ({ currentStep, totalSteps, labels = [] }) => {
   const percent = Math.round(((currentStep - 1) / (totalSteps - 1)) * 100);
-
   return (
     <div className="progress-container">
       <div className="progress-bar-wrapper">
@@ -23,28 +12,15 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         </div>
         <div className="progress-steps">
           {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
-            <div
-              key={step}
-              className={`progress-step ${
-                step < currentStep
-                  ? 'completed'
-                  : step === currentStep
-                  ? 'active'
-                  : 'pending'
-              }`}
-            >
+            <div key={step} className={`progress-step ${step < currentStep ? 'completed' : step === currentStep ? 'active' : 'pending'}`}>
               <div className="step-dot">
                 {step < currentStep ? (
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                ) : (
-                  <span>{step}</span>
-                )}
+                ) : <span>{step}</span>}
               </div>
-              {labels[step - 1] && (
-                <span className="step-label">{labels[step - 1]}</span>
-              )}
+              {labels[step - 1] && <span className="step-label">{labels[step - 1]}</span>}
             </div>
           ))}
         </div>
@@ -53,21 +29,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   );
 };
 
-// ─── Champ de formulaire avec label + erreur ──────────────────────────────────
+// ─── Champ de formulaire ──────────────────────────────────────────────────────
 
-interface FormFieldProps {
-  label: string;
-  error?: string;
-  required?: boolean;
-  children: React.ReactNode;
-}
-
-export const FormField: React.FC<FormFieldProps> = ({
-  label,
-  error,
-  required,
-  children,
-}) => (
+export const FormField = ({ label, error, required, children }) => (
   <div className={`form-field ${error ? 'has-error' : ''}`}>
     <label className="field-label">
       {label}
@@ -88,25 +52,7 @@ export const FormField: React.FC<FormFieldProps> = ({
 
 // ─── Boutons de navigation ────────────────────────────────────────────────────
 
-interface NavButtonsProps {
-  onPrev?: () => void;
-  onNext?: () => void;
-  onSubmit?: () => void;
-  isFirst?: boolean;
-  isLast?: boolean;
-  isSubmitting?: boolean;
-  nextLabel?: string;
-}
-
-export const NavButtons: React.FC<NavButtonsProps> = ({
-  onPrev,
-  onNext,
-  onSubmit,
-  isFirst,
-  isLast,
-  isSubmitting,
-  nextLabel = 'Suivant',
-}) => (
+export const NavButtons = ({ onPrev, onNext, onSubmit, isFirst, isLast, isSubmitting, nextLabel = 'Suivant' }) => (
   <div className="nav-buttons">
     {!isFirst && (
       <button type="button" className="btn btn-secondary" onClick={onPrev}>
@@ -116,26 +62,14 @@ export const NavButtons: React.FC<NavButtonsProps> = ({
         Précédent
       </button>
     )}
-
     {isLast ? (
-      <button
-        type="button"
-        className="btn btn-primary btn-submit"
-        onClick={onSubmit}
-        disabled={isSubmitting}
-      >
+      <button type="button" className="btn btn-primary btn-submit" onClick={onSubmit} disabled={isSubmitting}>
         {isSubmitting ? (
-          <>
-            <span className="spinner" />
-            Envoi en cours…
-          </>
+          <><span className="spinner" />Envoi en cours…</>
         ) : (
-          <>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2.5 8.5l4 4 7-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Confirmer le devis
-          </>
+          <><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2.5 8.5l4 4 7-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>Confirmer le devis</>
         )}
       </button>
     ) : (
@@ -149,15 +83,9 @@ export const NavButtons: React.FC<NavButtonsProps> = ({
   </div>
 );
 
-// ─── Toast de notification ────────────────────────────────────────────────────
+// ─── Toast ────────────────────────────────────────────────────────────────────
 
-interface ToastProps {
-  type: 'success' | 'error';
-  message: string;
-  onClose?: () => void;
-}
-
-export const Toast: React.FC<ToastProps> = ({ type, message, onClose }) => (
+export const Toast = ({ type, message, onClose }) => (
   <div className={`toast toast-${type}`} role="alert">
     {type === 'success' ? (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -171,8 +99,6 @@ export const Toast: React.FC<ToastProps> = ({ type, message, onClose }) => (
       </svg>
     )}
     <span>{message}</span>
-    {onClose && (
-      <button className="toast-close" onClick={onClose} aria-label="Fermer">×</button>
-    )}
+    {onClose && <button className="toast-close" onClick={onClose} aria-label="Fermer">×</button>}
   </div>
 );

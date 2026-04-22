@@ -1,20 +1,10 @@
 import { useCallback, useState } from 'react';
 import { quoteApi } from '../services/api';
-import type {
-  FormErrors,
-  QuoteFormState,
-  QuotePayload,
-  QuoteResponse,
-  StepDriverData,
-  StepInsuranceData,
-  StepPersonalData,
-  StepVehicleData,
-} from '../types/quote';
 import { validateDriver, validateInsurance, validatePersonal, validateVehicle } from '../utils/validators';
 
 const TOTAL_STEPS = 5;
 
-const initialState: QuoteFormState = {
+const initialState = {
   currentStep: 1,
   personal: { nom: '', prenom: '', cityId: null, telephone: '' },
   driver: { dateNaissance: '', datePermis: '' },
@@ -36,29 +26,25 @@ const initialState: QuoteFormState = {
 };
 
 export function useQuoteForm() {
-  const [state, setState] = useState<QuoteFormState>(initialState);
+  const [state, setState] = useState(initialState);
 
-  // ─── Setters partiels par étape ───────────────────────────────────────────
-
-  const setPersonal = useCallback((data: Partial<StepPersonalData>) => {
+  const setPersonal = useCallback((data) => {
     setState((s) => ({ ...s, personal: { ...s.personal, ...data }, errors: {} }));
   }, []);
 
-  const setDriver = useCallback((data: Partial<StepDriverData>) => {
+  const setDriver = useCallback((data) => {
     setState((s) => ({ ...s, driver: { ...s.driver, ...data }, errors: {} }));
   }, []);
 
-  const setInsurance = useCallback((data: Partial<StepInsuranceData>) => {
+  const setInsurance = useCallback((data) => {
     setState((s) => ({ ...s, insurance: { ...s.insurance, ...data }, errors: {} }));
   }, []);
 
-  const setVehicle = useCallback((data: Partial<StepVehicleData>) => {
+  const setVehicle = useCallback((data) => {
     setState((s) => ({ ...s, vehicle: { ...s.vehicle, ...data }, errors: {} }));
   }, []);
 
-  // ─── Navigation ───────────────────────────────────────────────────────────
-
-  const validateCurrentStep = useCallback((): FormErrors => {
+  const validateCurrentStep = useCallback(() => {
     const { currentStep, personal, driver, insurance, vehicle } = state;
     switch (currentStep) {
       case 1: return validatePersonal(personal);
@@ -83,50 +69,34 @@ export function useQuoteForm() {
     setState((s) => ({ ...s, currentStep: Math.max(s.currentStep - 1, 1), errors: {} }));
   }, []);
 
-  const goToStep = useCallback((step: number) => {
+  const goToStep = useCallback((step) => {
     setState((s) => ({ ...s, currentStep: step, errors: {} }));
   }, []);
 
-  // ─── Soumission finale ────────────────────────────────────────────────────
-
-  const submit = useCallback(async (): Promise<QuoteResponse | null> => {
+  const submit = useCallback(async () => {
     setState((s) => ({ ...s, isSubmitting: true, errors: {} }));
-
     const { personal, driver, insurance, vehicle } = state;
-
-    const payload: QuotePayload = {
+    const payload = {
       ...personal,
       ...driver,
       ...insurance,
       ...vehicle,
-      typeAssurance: insurance.typeAssurance as QuotePayload['typeAssurance'],
       statut: 'submitted',
     };
-
     try {
       const result = await quoteApi.create(payload);
       setState((s) => ({ ...s, isSubmitting: false, savedQuote: result.data }));
       return result.data;
-    } catch (err: unknown) {
-      const apiErr = err as Error & { details?: Record<string, string> };
-      const errors: FormErrors = apiErr.details ?? { nom: apiErr.message };
+    } catch (err) {
+      const errors = err.details ?? { nom: err.message };
       setState((s) => ({ ...s, isSubmitting: false, errors }));
       return null;
     }
   }, [state]);
 
-  // ─── Sauvegarde brouillon ─────────────────────────────────────────────────
-
   const saveDraft = useCallback(async () => {
     const { personal, driver, insurance, vehicle } = state;
-    const payload: QuotePayload = {
-      ...personal,
-      ...driver,
-      ...insurance,
-      ...vehicle,
-      typeAssurance: insurance.typeAssurance as QuotePayload['typeAssurance'],
-      statut: 'draft',
-    };
+    const payload = { ...personal, ...driver, ...insurance, ...vehicle, statut: 'draft' };
     try {
       const result = await quoteApi.create(payload);
       setState((s) => ({ ...s, savedQuote: result.data }));

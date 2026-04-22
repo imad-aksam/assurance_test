@@ -5,10 +5,10 @@ import './styles/global.css';
 
 /**
  * Routage simple basé sur le hash :
- *   /           → Formulaire de devis
- *   /#/admin    → Tableau de bord admin
+ *   /           → Formulaire de devis client
+ *   /#/admin    → Interface d'administration
  */
-const App: React.FC = () => {
+const App = () => {
   const [hash, setHash] = React.useState(window.location.hash);
 
   React.useEffect(() => {
