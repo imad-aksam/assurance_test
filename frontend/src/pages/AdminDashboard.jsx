@@ -154,7 +154,7 @@ const AdminDashboard = ({ onLogout }) => {
         <div className="adm-brand">
           <div>
             <a href="/" style={{ textDecoration: 'none' }}>
-              <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--adm-accent, #6366f1)' }}>AssurDevis</div>
+              <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--adm-accent, #6366f1)' }}>Assurance Aksam</div>
             </a>
             <div className="adm-brand-sub">Administration</div>
           </div>
