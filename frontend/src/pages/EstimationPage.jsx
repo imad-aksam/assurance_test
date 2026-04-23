@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { quoteApi } from "../services/api";
+import logo from '../assets/logo.png';
 
 // ─────────────────────────────────────────────
 //  MOTEUR DE CALCUL (logique PDF Maroc)
@@ -252,7 +253,9 @@ console.log('quoteId:', quoteId);
         <header className="app-header">
           <div className="header-inner">
             <div className="logo">
-              <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--primary)' }}>AssurDevis</span>
+              <a href="/">
+              <img src={logo} alt="AssurDevis" />
+              </a>
             </div>
             <div className="header-meta">
               <span className="header-step-label">Votre estimation</span>

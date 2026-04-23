@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
-
 import HomePage from './pages/HomePage';
 import QuoteFormPage from './pages/QuoteFormPage';
 import EstimationPage from './pages/EstimationPage';
@@ -25,26 +24,18 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Homepage */}
         <Route path="/" element={<HomePage />} />
-
-        {/* Devis flow */}
         <Route path="/devis" element={<QuoteFormPage />} />
         <Route path="/estimation" element={<EstimationPage />} />
-
-        {/* Admin */}
+        <Route path="/admin" element={<AdminLogin onSuccess={handleLogin} />} />
         <Route
-          path="/admin"
+          path="/admin/dashboard"
           element={
-            isAdminAuthenticated ? (
-              <AdminDashboard onLogout={handleLogout} />
-            ) : (
-              <AdminLogin onLogin={handleLogin} />
-            )
+            isAdminAuthenticated
+              ? <AdminDashboard onLogout={handleLogout} />
+              : <Navigate to="/admin" replace />
           }
         />
-
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
