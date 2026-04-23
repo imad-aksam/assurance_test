@@ -1,41 +1,52 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import QuoteFormPage   from './pages/QuoteFormPage';
-import AdminDashboard  from './pages/AdminDashboard';
-import AdminLogin, { isAuthenticated, logout } from './pages/AdminLogin';
-import EstimationPage  from './pages/EstimationPage';
-import './styles/global.css';
-import './styles/login.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
 
-// ─── Admin route with auth guard ────────────────────────────────────────────
-const AdminRoute = () => {
-  const [authed, setAuthed] = useState(isAuthenticated);
-  const navigate = useNavigate();
+import HomePage from './pages/HomePage';
+import QuoteFormPage from './pages/QuoteFormPage';
+import EstimationPage from './pages/EstimationPage';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
-  if (!authed) {
-    return <AdminLogin onSuccess={() => setAuthed(true)} />;
-  }
+export default function App() {
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(
+    () => localStorage.getItem('adminAuth') === 'true'
+  );
+
+  const handleLogin = () => {
+    localStorage.setItem('adminAuth', 'true');
+    setIsAdminAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminAuth');
+    setIsAdminAuthenticated(false);
+  };
 
   return (
-    <AdminDashboard
-      onLogout={() => {
-        logout();
-        setAuthed(false);
-        navigate('/');
-      }}
-    />
+    <BrowserRouter>
+      <Routes>
+        {/* Homepage */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Devis flow */}
+        <Route path="/devis" element={<QuoteFormPage />} />
+        <Route path="/estimation" element={<EstimationPage />} />
+
+        {/* Admin */}
+        <Route
+          path="/admin"
+          element={
+            isAdminAuthenticated ? (
+              <AdminDashboard onLogout={handleLogout} />
+            ) : (
+              <AdminLogin onLogin={handleLogin} />
+            )
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
-};
-
-// ─── App ────────────────────────────────────────────────────────────────────
-const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/"           element={<QuoteFormPage />} />
-      <Route path="/admin"      element={<AdminRoute />} />
-      <Route path="/estimation" element={<EstimationPage />} />
-    </Routes>
-  </BrowserRouter>
-);
-
-export default App;
+}

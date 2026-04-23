@@ -1,0 +1,225 @@
+/* ── Root ── */
+.hp-root {
+  min-height: 100vh;
+  background: #f7f5f0;
+  font-family: 'Georgia', serif;
+  color: #1a1a1a;
+}
+
+/* ── Nav ── */
+.hp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  background: #fff;
+  border-bottom: 1px solid #e8e4dc;
+}
+
+.hp-logo {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
+}
+
+.hp-nav-cta {
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.hp-nav-cta:hover { background: #333; }
+
+/* ── Hero ── */
+.hp-hero {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+}
+
+.hp-hero-badge {
+  display: inline-block;
+  background: #e8f4ec;
+  color: #2d7a4a;
+  font-size: 0.78rem;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 2rem;
+}
+
+.hp-hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  margin: 0 0 1.25rem;
+  color: #0f0f0f;
+}
+
+.hp-hero-accent {
+  color: #c85a20;
+  font-style: italic;
+}
+
+.hp-hero-sub {
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.7;
+  margin: 0 0 2.25rem;
+  font-family: 'Georgia', serif;
+}
+
+.hp-hero-btn {
+  background: #c85a20;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.9rem 2.25rem;
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: background 0.15s, transform 0.1s;
+}
+.hp-hero-btn:hover { background: #a84818; transform: translateY(-1px); }
+.hp-hero-btn:active { transform: translateY(0); }
+
+.hp-hero-hint {
+  font-size: 0.78rem;
+  color: #999;
+  margin: 0.9rem 0 0;
+  font-family: 'Courier New', monospace;
+}
+
+/* ── Features ── */
+.hp-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+}
+
+.hp-feature-card {
+  background: #fff;
+  border: 1px solid #e8e4dc;
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem;
+}
+
+.hp-feature-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.hp-feature-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hp-feature-desc {
+  font-size: 0.88rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+/* ── Steps ── */
+.hp-steps {
+  background: #1a1a1a;
+  color: #f7f5f0;
+  padding: 4.5rem 2rem;
+  text-align: center;
+}
+
+.hp-steps-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0 0 3rem;
+}
+
+.hp-steps-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  max-width: 680px;
+  margin: 0 auto 3rem;
+}
+
+.hp-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.hp-step-num {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #c85a20;
+  font-family: 'Courier New', monospace;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.hp-step-label {
+  font-size: 0.88rem;
+  color: #bbb;
+  max-width: 120px;
+  line-height: 1.4;
+  font-family: 'Georgia', serif;
+}
+
+.hp-step-arrow {
+  font-size: 1.25rem;
+  color: #444;
+  padding: 0 1.5rem;
+  margin-bottom: 1.25rem;
+  align-self: flex-start;
+  padding-top: 0.4rem;
+}
+
+.hp-steps-btn {
+  background: #c85a20;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem 2rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.hp-steps-btn:hover { background: #a84818; }
+
+/* ── Footer ── */
+.hp-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2.5rem;
+  font-size: 0.78rem;
+  color: #999;
+  border-top: 1px solid #e8e4dc;
+  font-family: 'Courier New', monospace;
+  background: #fff;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

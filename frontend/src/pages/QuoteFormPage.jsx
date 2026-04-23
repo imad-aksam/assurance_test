@@ -10,6 +10,7 @@ import StepSummary from '../components/steps/StepSummary';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { quoteApi } from '../services/api';
+import '../styles/global.css';
 
 
 
@@ -47,7 +48,7 @@ const QuoteFormPage = () => {
       <header className="app-header">
         <div className="header-inner">
           <div className="logo">
-            <a href="https://www.aksam-assurances.fr/">
+            <a href="/home">
               <img src={logo} alt="AssurDevis" />
             </a>
           </div>
