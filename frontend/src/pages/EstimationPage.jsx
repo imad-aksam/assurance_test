@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import logo from '../assets/logo.png';
+import { quoteApi } from "../services/api";
 
 // ─────────────────────────────────────────────
 //  MOTEUR DE CALCUL (logique PDF Maroc)
@@ -15,17 +15,17 @@ function calculerDevis(data) {
     puissance = (horsePower || 0) * 200;
   } else {
     const cc = horsePower || 0;
-    if (cc <= 125)      { base = 1000; puissance = 100; }
+    if (cc <= 125) { base = 1000; puissance = 100; }
     else if (cc <= 600) { base = 2000; puissance = 125; }
-    else                { base = 3500; puissance = 150; }
+    else { base = 3500; puissance = 150; }
   }
 
-  const age    = driverAge < 25 ? 1.30 : driverAge > 60 ? 1.15 : 1.00;
-  const years  = parseInt(licenseYears) || 0;
+  const age = driverAge < 25 ? 1.30 : driverAge > 60 ? 1.15 : 1.00;
+  const years = parseInt(licenseYears) || 0;
   const permis = years < 2 ? 1.25 : years < 5 ? 1.10 : 1.00;
-  const zones  = { casablanca: 1.25, rabat: 1.10, marrakech: 1.10, rural: 0.90 };
-  const zone   = zones[String(city).toLowerCase()] ?? 1.00;
-  const socle  = (base + puissance) * age * permis * zone;
+  const zones = { casablanca: 1.25, rabat: 1.10, marrakech: 1.10, rural: 0.90 };
+  const zone = zones[String(city).toLowerCase()] ?? 1.00;
+  const socle = (base + puissance) * age * permis * zone;
 
   return [
     {
@@ -94,13 +94,13 @@ function calculerDevis(data) {
 // ─────────────────────────────────────────────
 //  CARTE OFFRE
 // ─────────────────────────────────────────────
-function OfferCard({ offer, onSelect }) {
+function OfferCard({ offer, onSelect, disabled }) {
   return (
     <div
       className={`est-card ${offer.highlight ? "est-card--highlight" : ""}`}
       style={{
-        "--accent":        offer.accentColor,
-        "--accent-light":  offer.accentLight,
+        "--accent": offer.accentColor,
+        "--accent-light": offer.accentLight,
         "--accent-border": offer.accentBorder,
       }}
     >
@@ -131,8 +131,8 @@ function OfferCard({ offer, onSelect }) {
         {offer.garanties.map((g) => (
           <li key={g} className="est-card__list-item est-card__list-item--ok">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <circle cx="7" cy="7" r="6.5" fill="var(--accent)" opacity=".15"/>
-              <path d="M4 7l2 2 4-4" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="7" cy="7" r="6.5" fill="var(--accent)" opacity=".15" />
+              <path d="M4 7l2 2 4-4" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             {g}
           </li>
@@ -140,18 +140,18 @@ function OfferCard({ offer, onSelect }) {
         {offer.exclusions.map((e) => (
           <li key={e} className="est-card__list-item est-card__list-item--no">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <circle cx="7" cy="7" r="6.5" fill="#94a3b8" opacity=".15"/>
-              <path d="M5 5l4 4M9 5l-4 4" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="7" cy="7" r="6.5" fill="#94a3b8" opacity=".15" />
+              <path d="M5 5l4 4M9 5l-4 4" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             {e}
           </li>
         ))}
       </ul>
 
-      <button className="est-card__cta" onClick={() => onSelect(offer)}>
-        Choisir cette offre
+      <button className="est-card__cta" onClick={() => onSelect(offer)} disabled={disabled}>
+        {disabled ? 'Enregistrement…' : 'Choisir cette offre'}
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
     </div>
@@ -164,8 +164,9 @@ function OfferCard({ offer, onSelect }) {
 export default function EstimationPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [selected, setSelected]   = useState(null);
-  const [visible,  setVisible]    = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
 
@@ -174,8 +175,34 @@ export default function EstimationPage() {
     city: "rabat", firstName: "Yassine", lastName: "El Alami",
     vehicleBrand: "Dacia", vehicleModel: "Logan",
   };
+  const quoteId = location.state?.quoteId ?? null;
+  console.log('STATE:', location.state);
+console.log('quoteId:', quoteId);
 
   const offres = calculerDevis(data);
+
+  const handleSelect = async (offer) => {
+    setSaving(true);
+    try {
+      if (quoteId) {
+        const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://localhost:8002/api';
+        await fetch(`${BASE_URL}/quotes/${quoteId}/offre`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            offreChoisie: offer.id,
+            prixOffre: offer.prix,
+            statut: 'confirmed',
+          }),
+        });
+      }
+    } catch (e) {
+      console.warn('Offre non sauvegardée en base:', e);
+    } finally {
+      setSaving(false);
+      setSelected(offer);
+    }
+  };
 
   // ── Confirmation après sélection ──
   if (selected) {
@@ -187,8 +214,8 @@ export default function EstimationPage() {
             <div className="success-screen">
               <div className="success-icon" style={{ color: "#059669" }}>
                 <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                  <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M18 32l10 10 18-20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="2" />
+                  <path d="M18 32l10 10 18-20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
               <h2 className="success-title">Offre sélectionnée !</h2>
@@ -225,7 +252,7 @@ export default function EstimationPage() {
         <header className="app-header">
           <div className="header-inner">
             <div className="logo">
-              <img src={logo} alt="Assurance aksam" />
+              <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--primary)' }}>AssurDevis</span>
             </div>
             <div className="header-meta">
               <span className="header-step-label">Votre estimation</span>
@@ -260,8 +287,8 @@ export default function EstimationPage() {
           {/* Info box */}
           <div className="info-box est-infobox">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
-              <circle cx="9" cy="9" r="8" stroke="currentColor" strokeWidth="1.4"/>
-              <path d="M9 8v5M9 6v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="9" cy="9" r="8" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M9 8v5M9 6v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             <span>
               Les prix ci-dessous sont des <strong>estimations indicatives</strong> calculées selon
@@ -272,7 +299,7 @@ export default function EstimationPage() {
           {/* Grille des offres */}
           <div className="est-grid">
             {offres.map((o) => (
-              <OfferCard key={o.id} offer={o} onSelect={setSelected} />
+              <OfferCard key={o.id} offer={o} onSelect={handleSelect} disabled={saving} />
             ))}
           </div>
 

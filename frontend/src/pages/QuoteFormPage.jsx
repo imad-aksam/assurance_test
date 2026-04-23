@@ -34,8 +34,9 @@ const QuoteFormPage = () => {
         ...state.insurance,
         ...state.vehicle,
       };
-      await quoteApi.create(payload);
-      navigate('/estimation', { state: { quoteData: payload } });
+      const res = await quoteApi.create(payload);
+      
+      navigate('/estimation', { state: { quoteData: payload, quoteId: res?.data?.id, payload } });
     } catch (err) {
       console.error('Erreur soumission:', err);
     }
@@ -47,13 +48,13 @@ const QuoteFormPage = () => {
         <div className="header-inner">
           <div className="logo">
             <a href="https://www.aksam-assurances.fr/">
-            <img src={logo} alt="AssurDevis"  />
+              <img src={logo} alt="AssurDevis" />
             </a>
           </div>
           <div className="header-meta">
             <span className="header-step-label">Besion d'aide?</span>
             <br />
-            	<a href="tel:0182834800">0182834800</a>
+            <a href="tel:0182834800">0182834800</a>
           </div>
         </div>
       </header>
@@ -87,13 +88,7 @@ const QuoteFormPage = () => {
               onEdit={form.goToStep} savedQuote={state.savedQuote} />
           )}
         </div>
-        {state.currentStep < 5 && !state.savedQuote && (
-          <div className="draft-action">
-            <button type="button" className="btn-ghost" onClick={form.saveDraft}>
-              💾 Sauvegarder en brouillon
-            </button>
-          </div>
-        )}
+
       </main>
     </div>
   );

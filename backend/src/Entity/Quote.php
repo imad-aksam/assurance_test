@@ -126,6 +126,14 @@ class Quote
     #[ORM\Column(length: 20)]
     private string $statut = self::STATUS_DRAFT;
 
+    // ─── Offre choisie ────────────────────────────────────────────────────────
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $offreChoisie = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?float $prixOffre = null;
+
     // ─── Timestamps ───────────────────────────────────────────────────────────
 
     #[ORM\Column(type: 'datetime')]
@@ -202,6 +210,12 @@ class Quote
     public function getStatut(): string { return $this->statut; }
     public function setStatut(string $statut): self { $this->statut = $statut; return $this; }
 
+    public function getOffreChoisie(): ?string { return $this->offreChoisie; }
+    public function setOffreChoisie(?string $o): self { $this->offreChoisie = $o; return $this; }
+
+    public function getPrixOffre(): ?float { return $this->prixOffre; }
+    public function setPrixOffre(?float $p): self { $this->prixOffre = $p; return $this; }
+
     public function getCreatedAt(): \DateTimeInterface { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeInterface { return $this->updatedAt; }
 
@@ -228,6 +242,8 @@ class Quote
             'puissanceFiscale'      => $this->puissanceFiscale,
             'cylindree'             => $this->cylindree,
             'statut'                => $this->statut,
+            'offreChoisie'          => $this->offreChoisie,
+            'prixOffre'             => $this->prixOffre,
             'createdAt'             => $this->createdAt->format('Y-m-d H:i:s'),
             'updatedAt'             => $this->updatedAt->format('Y-m-d H:i:s'),
         ];

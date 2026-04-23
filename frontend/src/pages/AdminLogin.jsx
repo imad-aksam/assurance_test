@@ -169,7 +169,7 @@ const AdminLogin = ({ onSuccess }) => {
                   strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span className="login-logo-name">AssurDevis</span>
+            <span className="login-logo-name">Assurance Aksam</span>
           </div>
 
           {/* Headline */}
@@ -216,7 +216,7 @@ const AdminLogin = ({ onSuccess }) => {
                   strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span>AssurDevis Admin</span>
+            <span>Assurance Aksam Admin</span>
           </div>
 
           <div className="login-form-header">
@@ -322,19 +322,10 @@ const AdminLogin = ({ onSuccess }) => {
                 </>
               )}
             </button>
-
-            {/* Hint credentials démo */}
-            <div className="login-hint">
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2"/>
-                <path d="M7 6.5v4M7 5v-.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-              </svg>
-              Démo : <code>admin</code> / <code>admin2024</code>
-            </div>
           </form>
 
           <p className="login-footer">
-            AssurDevis © {new Date().getFullYear()} — Accès sécurisé
+            Assurance Aksam © {new Date().getFullYear()} — Accès sécurisé
           </p>
         </div>
       </div>

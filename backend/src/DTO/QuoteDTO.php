@@ -92,6 +92,12 @@ class QuoteDTO
     /** draft | submitted | confirmed */
     public string $statut = 'submitted';
 
+    /** rc | tiers | tous */
+    public ?string $offreChoisie = null;
+
+    /** Prix annuel de l'offre choisie en DH */
+    public ?float $prixOffre = null;
+
     /**
      * Construit un DTO depuis un tableau (corps JSON de la requête).
      */
@@ -115,6 +121,8 @@ class QuoteDTO
         $dto->puissanceFiscale      = isset($data['puissanceFiscale']) ? (int) $data['puissanceFiscale'] : null;
         $dto->cylindree             = isset($data['cylindree']) ? (int) $data['cylindree'] : null;
         $dto->statut                = $data['statut'] ?? 'submitted';
+        $dto->offreChoisie          = $data['offreChoisie'] ?? null;
+        $dto->prixOffre             = isset($data['prixOffre']) ? (float) $data['prixOffre'] : null;
 
         return $dto;
     }

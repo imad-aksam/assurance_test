@@ -48,6 +48,7 @@ useEffect(() => {
   if (savedQuote) {
     navigate('/estimation', {
       state: {
+        quoteId: savedQuote.id,
         quoteData: {
           vehicleType: insurance.typeAssurance,
           horsePower: insurance.typeAssurance === 'auto'

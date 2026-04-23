@@ -90,6 +90,10 @@ class QuoteService
             $quote->setCylindree($dto->cylindree);
             $quote->setPuissanceFiscale(null);
         }
+
+        // Offre choisie (optionnel — renseigné depuis EstimationPage)
+        $quote->setOffreChoisie($dto->offreChoisie);
+        $quote->setPrixOffre($dto->prixOffre);
     }
 
     /**

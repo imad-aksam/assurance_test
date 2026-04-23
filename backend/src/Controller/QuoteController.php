@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\QuoteDTO;
 use App\Repository\QuoteRepository;
 use App\Service\QuoteService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +21,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class QuoteController extends AbstractController
 {
     public function __construct(
-        private readonly QuoteService    $quoteService,
-        private readonly QuoteRepository $quoteRepo,
+        private readonly QuoteService           $quoteService,
+        private readonly QuoteRepository        $quoteRepo,
+        private readonly EntityManagerInterface $em,
     ) {}
 
     // ─── GET /api/quotes ──────────────────────────────────────────────────────
@@ -37,7 +39,7 @@ class QuoteController extends AbstractController
         $total  = $this->quoteRepo->countAll();
 
         return $this->json([
-            'data'  => array_map(fn ($q) => $q->toArray(), $quotes),
+            'data'  => array_map(fn($q) => $q->toArray(), $quotes),
             'total' => $total,
             'page'  => $page,
             'limit' => $limit,
@@ -119,6 +121,31 @@ class QuoteController extends AbstractController
         }
     }
 
+    // ─── PATCH /api/quotes/{id}/offre ─────────────────────────────────────────
+
+    /** Met à jour uniquement l'offre choisie et le statut. */
+    #[Route('/{id}/offre', name: 'patch_offre', methods: ['PATCH'], requirements: ['id' => '\\d+'])]
+    public function patchOffre(int $id, Request $request): JsonResponse
+    {
+        $quote = $this->quoteRepo->find($id);
+
+        if (!$quote) {
+            return $this->json(['error' => "Devis #{$id} introuvable."], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        $quote->setOffreChoisie($data['offreChoisie'] ?? null);
+        $quote->setPrixOffre(isset($data['prixOffre']) ? (float) $data['prixOffre'] : null);
+        if (!empty($data['statut'])) {
+            $quote->setStatut($data['statut']);
+        }
+
+        $this->em->flush();
+
+        return $this->json(['message' => 'Offre mise à jour.', 'data' => $quote->toArray()]);
+    }
+
     // ─── DELETE /api/quotes/{id} ──────────────────────────────────────────────
 
     /** Supprime un devis (admin uniquement, à protéger avec un firewall). */
@@ -131,9 +158,8 @@ class QuoteController extends AbstractController
             return $this->json(['error' => "Devis #{$id} introuvable."], Response::HTTP_NOT_FOUND);
         }
 
-        $em = $this->container->get('doctrine')->getManager();
-        $em->remove($quote);
-        $em->flush();
+        $this->em->remove($quote);
+        $this->em->flush();
 
         return $this->json(['message' => "Devis #{$id} supprimé."], Response::HTTP_OK);
     }

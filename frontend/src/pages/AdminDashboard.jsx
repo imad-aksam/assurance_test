@@ -339,6 +339,7 @@ const AdminDashboard = ({ onLogout }) => {
                       <th>Téléphone</th>
                       <th className="sortable" onClick={() => toggleSort('typeAssurance')}>Type <SortIcon field="typeAssurance"/></th>
                       <th>Véhicule / Immat.</th>
+                      <th>Offre choisie</th>
                       <th>Valeur vénale</th>
                       <th className="sortable" onClick={() => toggleSort('statut')}>Statut <SortIcon field="statut"/></th>
                       <th className="sortable" onClick={() => toggleSort('createdAt')}>Date <SortIcon field="createdAt"/></th>
@@ -368,6 +369,19 @@ const AdminDashboard = ({ onLogout }) => {
                               <span>{q.marqueVehicule}</span>
                               <code className="adm-code sm">{q.immatriculation}</code>
                             </div>
+                          </td>
+                          <td>
+                            {q.offreChoisie ? (
+                              <span style={{
+                                fontWeight: 600, fontSize: '.8rem',
+                                color: q.offreChoisie === 'tous' ? '#059669' : q.offreChoisie === 'tiers' ? '#7c3aed' : '#1a56db'
+                              }}>
+                                {q.offreChoisie === 'rc'    && '🛡️ RC'}
+                                {q.offreChoisie === 'tiers' && '⭐ Tiers Étendu'}
+                                {q.offreChoisie === 'tous'  && '💎 Tous Risques'}
+                                {q.prixOffre && <div style={{ fontWeight: 400, color: '#6b7280', fontSize: '.75rem' }}>{fmtMoney(q.prixOffre)}/an</div>}
+                              </span>
+                            ) : <span style={{ color: '#9ca3af', fontSize: '.8rem' }}>—</span>}
                           </td>
                           <td className="cell-money">{fmtMoney(q.valeurVenale)}</td>
                           <td>
@@ -511,6 +525,33 @@ const AdminDashboard = ({ onLogout }) => {
                   <Dr label="Valeur à neuf"  value={<strong>{fmtMoney(selected.valeurNeuf)}</strong>}/>
                   <Dr label="Valeur vénale"  value={<strong>{fmtMoney(selected.valeurVenale)}</strong>}/>
                 </DetailSection>
+                {selected.offreChoisie && (
+                  <DetailSection title="✅ Offre choisie">
+                    <Dr label="Formule" value={
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        fontWeight: 700, fontSize: '1rem',
+                        color: selected.offreChoisie === 'tous' ? '#059669' : selected.offreChoisie === 'tiers' ? '#7c3aed' : '#1a56db'
+                      }}>
+                        {selected.offreChoisie === 'rc'    && '🛡️ Responsabilité Civile'}
+                        {selected.offreChoisie === 'tiers' && '⭐ Tiers Étendu'}
+                        {selected.offreChoisie === 'tous'  && '💎 Tous Risques'}
+                      </span>
+                    }/>
+                    {selected.prixOffre && (
+                      <Dr label="Prime annuelle" value={
+                        <strong style={{ fontSize: '1.1rem', color: '#059669' }}>
+                          {fmtMoney(selected.prixOffre)}
+                        </strong>
+                      }/>
+                    )}
+                    <Dr label="Mensualité estimée" value={
+                      selected.prixOffre
+                        ? `~${fmtMoney(Math.round(selected.prixOffre / 12))} / mois`
+                        : '—'
+                    }/>
+                  </DetailSection>
+                )}
                 <DetailSection title="📌 Métadonnées">
                   <Dr label="Référence"  value={fmtId(selected.id)}/>
                   <Dr label="Créé le"    value={new Date(selected.createdAt).toLocaleString('fr-MA')}/>
